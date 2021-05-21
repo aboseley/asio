@@ -37,6 +37,22 @@ constexpr executor_t executor;
 __declspec(selectany) executor_t executor;
 #endif
 
+/// Awaitable type that returns the cancellation state of the current coroutine.
+struct cancellation_state_t
+{
+  ASIO_CONSTEXPR cancellation_state_t()
+  {
+  }
+};
+
+/// Awaitable object that returns the cancellation state of the current
+/// coroutine.
+#if defined(ASIO_HAS_CONSTEXPR) || defined(GENERATING_DOCUMENTATION)
+constexpr cancellation_state_t cancellation_state;
+#elif defined(ASIO_MSVC)
+__declspec(selectany) cancellation_state_t cancellation_state;
+#endif
+
 } // namespace this_coro
 } // namespace asio
 
