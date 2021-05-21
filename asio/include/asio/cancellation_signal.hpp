@@ -292,6 +292,53 @@ inline cancellation_slot cancellation_signal::slot()
   return cancellation_slot(0, &handler_);
 }
 
+/// A cancellation state is used for chaining signals and slots in compositions.
+class cancellation_state
+{
+public:
+  /// Construct from a slot to create a new child slot.
+  template <typename CancellationSlot>
+  explicit cancellation_state(CancellationSlot slot)
+    : impl_(slot.is_connected() ? &slot.template emplace<impl>() : 0)
+  {
+  }
+
+  /// Returns the single slot associated with the state.
+  /**
+   * This sub-slot is used with the operations that are being composed.
+   */
+  cancellation_slot slot() const ASIO_NOEXCEPT
+  {
+    return impl_ ? impl_->signal_.slot() : cancellation_slot();
+  }
+
+  /// Returns whether cancellation has been triggered.
+  bool cancelled() const ASIO_NOEXCEPT
+  {
+    return impl_ ? impl_->cancelled_ : false;
+  }
+
+private:
+  struct impl
+  {
+    impl()
+      : cancelled_(false)
+    {
+    }
+
+    void operator()()
+    {
+      cancelled_ = true;
+      signal_.emit();
+    }
+
+    cancellation_signal signal_;
+    bool cancelled_;
+  };
+
+  impl* impl_;
+};
+
 } // namespace asio
 
 #include "asio/detail/pop_options.hpp"
