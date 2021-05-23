@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 3.0)
+project(timeouts)
+add_executable(${PROJECT_NAME}-async-tcp-client async_tcp_client.cpp)
+add_executable(${PROJECT_NAME}-blocking-tcp-client blocking_tcp_client.cpp)
+add_executable(${PROJECT_NAME}-blocking-token-tcp-client blocking_token_tcp_client.cpp)
+add_executable(${PROJECT_NAME}-blocking-udp-client blocking_udp_client.cpp)
+add_executable(${PROJECT_NAME}-server server.cpp)

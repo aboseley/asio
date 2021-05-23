@@ -1,0 +1,5 @@
+add_subdirectory(client)
+add_subdirectory(server)
+add_subdirectory(server2)
+add_subdirectory(server3)
+add_subdirectory(server4)
